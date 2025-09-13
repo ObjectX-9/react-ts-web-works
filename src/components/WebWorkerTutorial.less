@@ -1,0 +1,363 @@
+.web-worker-tutorial {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 20px;
+  line-height: 1.6;
+  color: #333;
+
+  h1 {
+    color: #1976d2;
+    border-bottom: 3px solid #1976d2;
+    padding-bottom: 10px;
+    margin-bottom: 30px;
+  }
+
+  .tutorial-section {
+    margin-bottom: 40px;
+
+    h2 {
+      color: #2e7d32;
+      margin-bottom: 20px;
+      padding-left: 10px;
+      border-left: 4px solid #4caf50;
+    }
+
+    h3 {
+      color: #ed6c02;
+      margin: 25px 0 15px 0;
+    }
+
+    h4 {
+      color: #1976d2;
+      margin: 15px 0 10px 0;
+    }
+  }
+
+  .content-card {
+    background: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 24px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+    p {
+      margin-bottom: 15px;
+    }
+
+    ul {
+      margin: 10px 0;
+      padding-left: 20px;
+
+      li {
+        margin-bottom: 8px;
+
+        strong {
+          color: #1976d2;
+        }
+      }
+    }
+  }
+
+  .highlight-box {
+    background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
+    border: 1px solid #bbdefb;
+    border-radius: 6px;
+    padding: 16px;
+    margin: 15px 0;
+
+    h4 {
+      margin-top: 0;
+      color: #1976d2;
+    }
+  }
+
+  .principle-diagram {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 30px 0;
+    flex-wrap: wrap;
+    gap: 20px;
+
+    .thread-box {
+      flex: 1;
+      min-width: 250px;
+      padding: 20px;
+      border-radius: 8px;
+      text-align: center;
+
+      &.main-thread {
+        background: linear-gradient(135deg, #e8f5e8 0%, #f1f8e9 100%);
+        border: 2px solid #4caf50;
+      }
+
+      &.worker-thread {
+        background: linear-gradient(135deg, #fff3e0 0%, #fce4ec 100%);
+        border: 2px solid #ff9800;
+      }
+
+      h4 {
+        margin: 0 0 15px 0;
+        font-size: 16px;
+      }
+
+      ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+
+        li {
+          padding: 5px 0;
+          color: #555;
+        }
+      }
+    }
+
+    .communication-arrow {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-width: 120px;
+      font-size: 14px;
+      font-weight: bold;
+
+      .arrow-up {
+        color: #ff5722;
+        margin-bottom: 10px;
+      }
+
+      .arrow-down {
+        color: #2196f3;
+      }
+    }
+  }
+
+  .use-cases {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+    margin: 20px 0;
+
+    .use-case {
+      background: #f8f9fa;
+      border: 1px solid #dee2e6;
+      border-radius: 6px;
+      padding: 16px;
+      text-align: center;
+
+      h4 {
+        margin: 0 0 10px 0;
+        color: #495057;
+      }
+
+      p {
+        margin: 0;
+        color: #6c757d;
+        font-size: 14px;
+      }
+    }
+  }
+
+  .code-block {
+    background: #2d3748;
+    border-radius: 6px;
+    margin: 15px 0;
+    overflow-x: auto;
+
+    pre {
+      color: #e2e8f0;
+      padding: 20px;
+      margin: 0;
+      font-family: "Fira Code", "Consolas", monospace;
+      font-size: 14px;
+      line-height: 1.5;
+      white-space: pre;
+      overflow-x: auto;
+    }
+  }
+
+  .best-practices {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+    margin: 20px 0;
+
+    .practice-item {
+      background: #f8f9fa;
+      border-left: 4px solid #17a2b8;
+      padding: 16px;
+      border-radius: 0 6px 6px 0;
+
+      h4 {
+        margin: 0 0 12px 0;
+        color: #17a2b8;
+      }
+
+      ul {
+        margin: 0;
+        padding-left: 16px;
+
+        li {
+          color: #495057;
+          margin-bottom: 6px;
+        }
+      }
+    }
+  }
+
+  .performance-comparison {
+    .comparison-item {
+      margin: 25px 0;
+      padding: 20px;
+      border-radius: 8px;
+
+      &.blocked {
+        background: #ffebee;
+        border: 1px solid #ffcdd2;
+      }
+
+      &.non-blocked {
+        background: #e8f5e8;
+        border: 1px solid #c8e6c9;
+      }
+
+      h4 {
+        margin: 0 0 15px 0;
+      }
+
+      .timeline {
+        display: flex;
+        gap: 10px;
+        margin: 15px 0;
+        flex-wrap: wrap;
+
+        .task {
+          padding: 8px 12px;
+          border-radius: 4px;
+          font-size: 12px;
+          font-weight: bold;
+          color: white;
+          min-width: 100px;
+          text-align: center;
+
+          &.task-ui {
+            background: #4caf50;
+
+            &.blocked {
+              background: #ccc;
+              color: #666;
+            }
+          }
+
+          &.task-calc {
+            background: #f44336;
+
+            &.worker {
+              background: #ff9800;
+            }
+          }
+        }
+      }
+
+      p {
+        margin: 10px 0 0 0;
+        font-style: italic;
+        color: #666;
+      }
+    }
+  }
+
+  .warning-box {
+    background: #fff3cd;
+    border: 1px solid #ffeaa7;
+    border-radius: 6px;
+    padding: 16px;
+    margin: 15px 0;
+
+    h4 {
+      margin-top: 0;
+      color: #856404;
+    }
+
+    ul li {
+      color: #856404;
+    }
+  }
+
+  .info-box {
+    background: #d1ecf1;
+    border: 1px solid #bee5eb;
+    border-radius: 6px;
+    padding: 16px;
+    margin: 15px 0;
+
+    h4 {
+      margin-top: 0;
+      color: #0c5460;
+    }
+
+    ul li {
+      color: #0c5460;
+    }
+  }
+
+  .tip-box {
+    background: #f3e5f5;
+    border: 1px solid #e1bee7;
+    border-radius: 6px;
+    padding: 16px;
+    margin: 15px 0;
+
+    h4 {
+      margin-top: 0;
+      color: #4a148c;
+    }
+
+    ul li {
+      color: #4a148c;
+    }
+  }
+
+  .note-box {
+    background: #e3f2fd;
+    border: 1px solid #bbdefb;
+    border-radius: 6px;
+    padding: 16px;
+    margin: 15px 0;
+
+    p {
+      margin: 0;
+      color: #1565c0;
+    }
+  }
+
+  // 响应式设计
+  @media (max-width: 768px) {
+    padding: 15px;
+
+    .principle-diagram {
+      flex-direction: column;
+
+      .communication-arrow {
+        flex-direction: row;
+        width: 100%;
+        justify-content: space-around;
+        margin: 15px 0;
+      }
+    }
+
+    .use-cases {
+      grid-template-columns: 1fr;
+    }
+
+    .best-practices {
+      grid-template-columns: 1fr;
+    }
+
+    .code-block pre {
+      padding: 15px;
+      font-size: 13px;
+    }
+  }
+}

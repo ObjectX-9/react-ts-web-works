@@ -1,0 +1,13 @@
+# 自动更新依赖
+version: 2
+updates:
+  # 启用 npm 依赖的版本更新
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    # 允许的最大拉取请求数量
+    open-pull-requests-limit: 5
+    # 将拉取请求分配给维护者
+    reviewers:
+      - "your-username" # 替换为您的 GitHub 用户名
