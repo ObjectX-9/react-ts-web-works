@@ -15,7 +15,6 @@ const WebWorkerDemo: React.FC = () => {
   const [taskType, setTaskType] = useState<
     "fibonacci" | "primes" | "calculation"
   >("fibonacci");
-  const [isMainThreadBlocked, setIsMainThreadBlocked] = useState(false);
   const [mainThreadResult, setMainThreadResult] = useState<any>(null);
   const [mainThreadTime, setMainThreadTime] = useState<number>(0);
 
@@ -39,27 +38,77 @@ const WebWorkerDemo: React.FC = () => {
     };
   }, []);
 
-  // 主线程执行斐波那契计算（会阻塞UI）
+  // 真正的主线程阻塞 - 完全同步，无任何状态控制
   const runMainThreadFibonacci = (n: number) => {
-    setIsMainThreadBlocked(true);
-    setMainThreadResult(null);
+    const start = performance.now();
 
-    setTimeout(() => {
-      const start = performance.now();
+    // 直接同步计算，会真正阻塞主线程
+    function fibonacciSlow(num: number): number {
+      if (num <= 1) return num;
+      return fibonacciSlow(num - 1) + fibonacciSlow(num - 2);
+    }
 
-      function fibonacciSlow(num: number): number {
-        if (num <= 1) return num;
-        return fibonacciSlow(num - 1) + fibonacciSlow(num - 2);
+    const result = fibonacciSlow(n);
+    const end = performance.now();
+    const timeElapsed = end - start;
+
+    // 计算完成后才更新结果
+    setMainThreadResult(result);
+    setMainThreadTime(timeElapsed);
+  };
+
+  const runMainThreadPrimes = (start: number, end: number) => {
+    const startTime = performance.now();
+
+    // 直接同步计算素数
+    function isPrime(num: number): boolean {
+      if (num <= 1) return false;
+      if (num <= 3) return true;
+      if (num % 2 === 0 || num % 3 === 0) return false;
+
+      for (let i = 5; i * i <= num; i += 6) {
+        if (num % i === 0 || num % (i + 2) === 0) return false;
       }
+      return true;
+    }
 
-      const result = fibonacciSlow(n);
-      const end = performance.now();
-      const timeElapsed = end - start;
+    const primes: number[] = [];
+    for (let i = start; i <= end; i++) {
+      if (isPrime(i)) {
+        primes.push(i);
+      }
+    }
 
-      setMainThreadResult(result);
-      setMainThreadTime(timeElapsed);
-      setIsMainThreadBlocked(false);
-    }, 100);
+    const endTime = performance.now();
+    const timeElapsed = endTime - startTime;
+
+    setMainThreadResult({
+      primes,
+      count: primes.length,
+      range: `${start}-${end}`,
+    });
+    setMainThreadTime(timeElapsed);
+  };
+
+  const runMainThreadCalculation = (iterations: number) => {
+    const startTime = performance.now();
+
+    // 直接同步密集计算
+    let result = 0;
+    for (let i = 0; i < iterations; i++) {
+      result += Math.sqrt(i) * Math.sin(i) * Math.cos(i);
+
+      // 增加计算强度
+      for (let j = 0; j < 1000; j++) {
+        result += Math.random() * 0.000001;
+      }
+    }
+
+    const endTime = performance.now();
+    const timeElapsed = endTime - startTime;
+
+    setMainThreadResult(result);
+    setMainThreadTime(timeElapsed);
   };
 
   const handleWorkerTask = () => {
@@ -79,35 +128,42 @@ const WebWorkerDemo: React.FC = () => {
     }
   };
 
+  // 直接执行同步计算，不使用任何状态控制
   const handleMainThreadTask = () => {
+    // 清除之前的结果
+    setMainThreadResult(null);
+
+    // 直接执行同步计算 - 这里会真正阻塞
     switch (taskType) {
       case "fibonacci":
-        runMainThreadFibonacci(40);
+        runMainThreadFibonacci(42); // 增加到42让阻塞更明显
+        break;
+      case "primes":
+        runMainThreadPrimes(1, 80000); // 增加范围让阻塞更明显
+        break;
+      case "calculation":
+        runMainThreadCalculation(1000000); // 增加迭代次数
         break;
       default:
-        setMainThreadResult({ error: "主线程演示仅支持斐波那契计算" });
+        setMainThreadResult({ error: "未知任务类型" });
     }
   };
 
   const getStatusClass = () => {
     if (isLoading) return "loading";
-    if (isMainThreadBlocked) return "blocked";
     return "normal";
   };
 
   const getStatusText = () => {
     if (isLoading) return "⚠️ Web Worker 运行中";
-    if (isMainThreadBlocked) return "🔴 主线程阻塞中";
     return "✅ 页面响应正常";
   };
 
   if (!isSupported) {
     return (
-      <div className="web-worker-demo">
-        <div className="not-supported">
-          <h1>❌ 您的浏览器不支持 Web Worker</h1>
-          <p>请使用现代浏览器访问此演示</p>
-        </div>
+      <div className="not-supported">
+        <h1>❌ 您的浏览器不支持 Web Worker</h1>
+        <p>请使用现代浏览器访问此演示</p>
       </div>
     );
   }
@@ -135,7 +191,7 @@ const WebWorkerDemo: React.FC = () => {
               checked={taskType === "fibonacci"}
               onChange={(e) => setTaskType(e.target.value as any)}
             />
-            斐波那契数列 (第40项)
+            斐波那契数列 (第42项 - 约3-5秒)
           </label>
           <label>
             <input
@@ -144,7 +200,7 @@ const WebWorkerDemo: React.FC = () => {
               checked={taskType === "primes"}
               onChange={(e) => setTaskType(e.target.value as any)}
             />
-            素数计算 (1-100000)
+            素数计算 (1-80000 - 约2-3秒)
           </label>
           <label>
             <input
@@ -153,7 +209,7 @@ const WebWorkerDemo: React.FC = () => {
               checked={taskType === "calculation"}
               onChange={(e) => setTaskType(e.target.value as any)}
             />
-            密集数学计算
+            密集数学计算 (约2-4秒)
           </label>
         </div>
       </div>
@@ -161,28 +217,24 @@ const WebWorkerDemo: React.FC = () => {
       <div className="button-group">
         <button
           onClick={handleWorkerTask}
-          disabled={isLoading || isMainThreadBlocked}
+          disabled={isLoading}
           className="btn btn-primary"
         >
           {isLoading ? "🔄 Web Worker 计算中..." : "🚀 使用 Web Worker 计算"}
         </button>
 
-        {taskType === "fibonacci" && (
-          <button
-            onClick={handleMainThreadTask}
-            disabled={isMainThreadBlocked || isLoading}
-            className="btn btn-danger"
-          >
-            {isMainThreadBlocked
-              ? "⏳ 主线程计算中..."
-              : "⚠️ 主线程计算（会卡顿）"}
-          </button>
-        )}
+        <button onClick={handleMainThreadTask} className="btn btn-danger">
+          ⚠️ 主线程计算（真正会卡死页面）
+        </button>
       </div>
 
       <div className="animation-section">
         <h3>🎯 页面响应性测试</h3>
-        <p>下面的动画可以帮助您观察页面是否被阻塞：</p>
+        <p>
+          <strong style={{ color: "#d32f2f" }}>
+            ⚠️ 注意：点击"主线程计算"后页面会完全卡死几秒钟！
+          </strong>
+        </p>
 
         <div className="main-animation">
           <div
@@ -202,8 +254,11 @@ const WebWorkerDemo: React.FC = () => {
           <p>
             <strong>🔍 观察要点：</strong>
             <br />• 使用 Web Worker 时：正方形持续旋转，角度数字持续更新
-            <br />• 主线程计算时：动画会明显卡顿或完全停止
-            <br />• 正方形的角和白色指示器让旋转效果更明显
+            <br />•{" "}
+            <span style={{ color: "#d32f2f", fontWeight: "bold" }}>
+              主线程计算时：页面完全卡死，无法点击任何按钮，动画完全停止
+            </span>
+            <br />• 您甚至无法滚动页面或选择文本
           </p>
         </div>
       </div>
@@ -231,7 +286,7 @@ const WebWorkerDemo: React.FC = () => {
             />
           </div>
           <div className="description">
-            水平移动指示器 - 也会在主线程阻塞时停止
+            水平移动指示器 - 主线程阻塞时会完全停止
           </div>
         </div>
 
@@ -261,6 +316,27 @@ const WebWorkerDemo: React.FC = () => {
 
           <div className="speed-labels">慢 | 中 | 快</div>
         </div>
+
+        <div
+          style={{
+            marginTop: "15px",
+            padding: "10px",
+            backgroundColor: "#fff3cd",
+            border: "1px solid #ffeaa7",
+            borderRadius: "4px",
+            fontSize: "14px",
+          }}
+        >
+          <strong>🚨 真实阻塞测试：</strong>
+          <br />
+          1. 观察上方动画正常运行
+          <br />
+          2. 点击"主线程计算"按钮
+          <br />
+          3. 立即尝试点击其他按钮或滚动页面
+          <br />
+          4. 您会发现页面完全无响应，这就是真正的主线程阻塞！
+        </div>
       </div>
 
       {/* Web Worker 进度条 */}
@@ -276,7 +352,7 @@ const WebWorkerDemo: React.FC = () => {
       {/* Web Worker 结果显示 */}
       {result && (
         <div className="result-section success">
-          <h3>✅ Web Worker 计算结果:</h3>
+          <h3>✅ Web Worker 计算结果 (页面保持响应):</h3>
           <div className="result-content">
             {JSON.stringify(result, null, 2)}
           </div>
@@ -293,20 +369,26 @@ const WebWorkerDemo: React.FC = () => {
           <h3>
             {mainThreadResult.error
               ? "❌ 主线程计算错误:"
-              : "⚠️ 主线程计算结果:"}
+              : "⚠️ 主线程计算结果 (页面刚刚卡死了):"}
           </h3>
           {mainThreadResult.error ? (
             <p>{mainThreadResult.error}</p>
           ) : (
             <div className="result-details">
               <p>
-                <strong>结果:</strong> {mainThreadResult}
+                <strong>结果:</strong>{" "}
+                {typeof mainThreadResult === "object" && mainThreadResult.primes
+                  ? `找到 ${mainThreadResult.count} 个素数`
+                  : typeof mainThreadResult === "number"
+                  ? mainThreadResult.toFixed(6)
+                  : JSON.stringify(mainThreadResult)}
               </p>
               <p>
                 <strong>耗时:</strong> {mainThreadTime.toFixed(2)}ms
               </p>
-              <p>
-                <strong>观察:</strong> 在计算过程中，上方的动画是否停止了？
+              <p style={{ color: "#d32f2f", fontWeight: "bold" }}>
+                <strong>体验:</strong>{" "}
+                刚才整个页面是不是完全卡死了？这就是主线程阻塞！
               </p>
             </div>
           )}
