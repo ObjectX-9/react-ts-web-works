@@ -10,4 +10,4 @@ updates:
     open-pull-requests-limit: 5
     # 将拉取请求分配给维护者
     reviewers:
-      - "your-username" # 替换为您的 GitHub 用户名
+      - "ObjectX-9" # 替换为您的 GitHub 用户名
