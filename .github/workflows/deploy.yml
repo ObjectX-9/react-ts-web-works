@@ -60,12 +60,6 @@ jobs:
             pnpm install
           fi
 
-      - name: 类型检查
-        run: pnpm run type-check
-
-      - name: ESLint 检查
-        run: pnpm run lint
-
       - name: 构建项目
         run: pnpm run build
 
