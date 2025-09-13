@@ -65,6 +65,9 @@ jobs:
 
       - name: 设置 Pages
         uses: actions/configure-pages@v4
+        with:
+          # 自动启用 Pages（如果尚未启用）
+          enablement: true
 
       - name: 上传构建产物
         uses: actions/upload-pages-artifact@v3
