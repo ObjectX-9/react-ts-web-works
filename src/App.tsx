@@ -2,6 +2,7 @@ import React from "react";
 import Tabs from "./components/Tabs";
 import WebWorkerDemo from "./components/WebWorkerDemo";
 import WebWorkerTutorial from "./components/WebWorkerTutorial";
+import BabelWorkerDemo from "./components/BabelWorkerDemo";
 
 const App: React.FC = () => {
   const tabItems = [
@@ -14,6 +15,11 @@ const App: React.FC = () => {
       key: "demo",
       label: "🔧 实时演示",
       children: <WebWorkerDemo />,
+    },
+    {
+      key: "babel",
+      label: "⚛️ Babel 编译",
+      children: <BabelWorkerDemo />,
     },
   ];
 
