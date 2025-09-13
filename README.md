@@ -1,7 +1,7 @@
 # 🔧 Web Worker 演示项目
 
-[![部署状态](https://github.com/your-username/webwork/workflows/部署到%20GitHub%20Pages/badge.svg)](https://github.com/your-username/webwork/actions)
-[![Live Demo](https://img.shields.io/badge/demo-live-green.svg)](https://your-username.github.io/webwork/)
+[![部署状态](https://github.com/ObjectX-9/react-ts-web-works/workflows/部署到%20GitHub%20Pages/badge.svg)](https://github.com/ObjectX-9/react-ts-web-works/actions)
+[![Live Demo](https://img.shields.io/badge/demo-live-green.svg)](https://ObjectX-9.github.io/react-ts-web-works/)
 
 一个展示 Web Worker 使用方法和性能优势的 React + TypeScript 演示项目。
 
@@ -15,7 +15,7 @@
 
 ## 🚀 在线演示
 
-访问 [在线演示](https://your-username.github.io/webwork/) 体验完整功能。
+访问 [在线演示](https://ObjectX-9.github.io/react-ts-web-works/) 体验完整功能。
 
 ## 🛠️ 本地开发
 
@@ -26,50 +26,32 @@
 
 ### 安装和运行
 
-\`\`\`bash
-
+```bash
 # 克隆项目
-
-git clone https://github.com/your-username/webwork.git
-cd webwork
+git clone https://github.com/ObjectX-9/react-ts-web-works.git
+cd react-ts-web-works
 
 # 安装依赖
-
 pnpm install
 
 # 启动开发服务器
-
 pnpm dev
 
 # 构建生产版本
-
 pnpm build
 
 # 预览构建结果
-
 pnpm preview
-\`\`\`
+```
 
 ## 📦 项目结构
 
-\`\`\`
-webwork/
+```
+react-ts-web-works/
 ├── src/
-│ ├── components/ # React 组件
-│ │ ├── WebWorkerDemo.tsx # 演示组件
-│ │ ├── WebWorkerTutorial.tsx # 教程组件
-│ │ ├── Tabs.tsx # 标签组件
-│ │ └── \*.less # 样式文件
-│ ├── hooks/ # 自定义 Hooks
-│ │ └── useWebWorker.ts
-│ ├── workers/ # Web Worker 文件
-│ │ └── calculator.worker.ts
-│ └── main.tsx # 应用入口
-├── .github/
-│ └── workflows/
-│ └── deploy.yml # GitHub Actions 部署配置
-└── package.json
-\`\`\`
+│   ├── components/          # React 组件
+│   │
+```
 
 ## 🔄 自动部署
 

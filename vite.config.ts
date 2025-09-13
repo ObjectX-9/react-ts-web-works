@@ -8,7 +8,7 @@ export default defineConfig({
     format: "es",
   },
   // GitHub Pages 部署配置
-  base: process.env.NODE_ENV === "production" ? "/webwork/" : "/",
+  base: process.env.NODE_ENV === "production" ? "/react-ts-web-works/" : "/",
   build: {
     outDir: "dist",
     assetsDir: "assets",
@@ -17,7 +17,6 @@ export default defineConfig({
       output: {
         manualChunks: {
           vendor: ["react", "react-dom"],
-          worker: ["./src/workers/calculator.worker.ts"],
         },
       },
     },
